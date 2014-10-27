@@ -1,0 +1,12 @@
+- explain dockerfile
+  - latest 1.3.4
+  - plugins
+  - explain plugin system
+  - explain cluster setting
+  - difference between client, data, master
+
+- explain how shards work / what they are
+
+- elastic search as a primary data store
+
+- Problems we've had with Cloudant/Couchdb _changes feeds
