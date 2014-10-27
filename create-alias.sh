@@ -1,9 +1,9 @@
-curl -XPUT http://localhost:9200/phillydevops2
+curl -XPUT http://localhost:9200/cposc2
 
 curl -XPOST http://localhost:9200/_aliases -d'
 {
 "actions":[
-{"add":{"index":"phillydevops2","alias":"phillydevops_forealz"}}
+{"add":{"index":"cposc2","alias":"cposc_forealz"}}
 ]
 }'
 
@@ -11,7 +11,7 @@ curl -XPOST http://localhost:9200/_aliases -d'
 curl -XPOST http://localhost:9200/_aliases -d'
 {
 "actions":[
-  {"remove": {"index":"phillydevops2","alias":"phillydevops_forealz"}},
-  {"add": {"index":"phillydevops","alias":"phillydevops_forealz"}}
+  {"remove": {"index":"cposc2","alias":"cposc_forealz"}},
+  {"add": {"index":"cposc","alias":"cposc_forealz"}}
 ]
 }'

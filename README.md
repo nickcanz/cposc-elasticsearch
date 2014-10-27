@@ -1,4 +1,4 @@
-phillydevops-elasticsearch
+CPOSC Elasticsearch
 ==========================
 
 ## Installation and setup
@@ -45,10 +45,10 @@ You should also be able to open a browser to [http://localhost:9200/_plugin/head
 
 ### Create our first index
 
-Let's create an index called phillydevops with 5 shards and 1 replica. A shard is the Elasticsearch term for the partitions in your dataset that Elasticsearch creates. For this index, we will have 10 shards in total (5 shards + 1 extra copy of each). We also create a mapping called meeting. This is going to be our data type and we could specify how we want different fields to be searched, but for simplicity we'll leave it blank to have the fields dynamically mapped. You can read more in the [Elasticsearch documentation on mappings](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-put-mapping.html).
+Let's create an index called cposc with 5 shards and 1 replica. A shard is the Elasticsearch term for the partitions in your dataset that Elasticsearch creates. For this index, we will have 10 shards in total (5 shards + 1 extra copy of each). We also create a mapping called meeting. This is going to be our data type and we could specify how we want different fields to be searched, but for simplicity we'll leave it blank to have the fields dynamically mapped. You can read more in the [Elasticsearch documentation on mappings](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-put-mapping.html).
 
 ```bash
-curl -XPUT 'http://localhost:9200/phillydevops/' -d '{
+curl -XPUT 'http://localhost:9200/cposc/' -d '{
   "settings" : {
     "index": {
       "number_of_shards": 5,
@@ -102,7 +102,7 @@ We can now create a Couchdb database and put some documents into Couchdb. Runnin
 
 ```bash
 
-curl http://localhost:5984/phillydevops/_all_docs
+curl http://localhost:5984/cposc/_all_docs
 
 #And you should see a response like
 {
@@ -142,17 +142,17 @@ docker ps | grep 'klaemo/couchdb' | cut -f1 -d' ' | xargs docker inspect | grep 
 Edit the `create-river.sh` file to put the IP address into the couchdb host field. My script looks like the following.
 
 ```bash
-curl -XDELETE http://localhost:9200/_river/phillydevops
-curl -XPOST http://localhost:9200/_river/phillydevops/_meta -d '{
+curl -XDELETE http://localhost:9200/_river/cposc
+curl -XPOST http://localhost:9200/_river/cposc/_meta -d '{
   "type": "couchdb",
   "couchdb": {
     "host" : "COUCHDB IP ADDRESS HERE", #Put "172.17.0.6" here
     "port" : 5984,
-    "db" : "phillydevops",
+    "db" : "cposc",
     "filter": null
   },
   "index" : {
-    "index" : "phillydevops",
+    "index" : "cposc",
     "type" : "meeting",
     "bulk_size" : "10",
     "bulk_timeout" : "100ms"
@@ -163,11 +163,11 @@ curl -XPOST http://localhost:9200/_river/phillydevops/_meta -d '{
 You can now execute the `create-river.sh` file and data should start flowing from Couchdb to Elasticsearch. Verify documents are in Elasticsearch:
 
 ```bash
-curl http://localhost:9200/phillydevops/_count #{"count":0,"_shards":{"total":5,"successful":5,"failed":0}}
+curl http://localhost:9200/cposc/_count #{"count":0,"_shards":{"total":5,"successful":5,"failed":0}}
 bash create-river.sh
-curl http://localhost:9200/phillydevops/_count #{"count":15,"_shards":{"total":5,"successful":5,"failed":0}}
+curl http://localhost:9200/cposc/_count #{"count":15,"_shards":{"total":5,"successful":5,"failed":0}}
 
 #Put some more documents in Couchdb
 bash meetings.data
-curl http://localhost:9200/phillydevops/_count #{"count":30,"_shards":{"total":5,"successful":5,"failed":0}}
+curl http://localhost:9200/cposc/_count #{"count":30,"_shards":{"total":5,"successful":5,"failed":0}}
 ```
